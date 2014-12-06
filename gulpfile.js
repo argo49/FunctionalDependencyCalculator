@@ -29,7 +29,10 @@ gulp.task('scripts', function() {
 
 // Minify HTML
 gulp.task('html', function () {
-    var options = {conditionals: true};
+    var options = {
+        conditionals: true,
+        empty: true // saves empty angular attrs
+    };
     return gulp.src('src/*.html')
         .pipe(minHtml(options))
         .pipe(gulp.dest('public'))
