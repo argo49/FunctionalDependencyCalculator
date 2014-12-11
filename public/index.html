@@ -7,30 +7,57 @@
 </head>
 <body>
 
+  <h1>Functional Dependency Calculator</h1>
+
+  <div class="schema" ng-controller="FdController">
+    <h2>
+      schema(
+      <span class="attribute" ng-repeat="attr in breakUpFD(schema) track by $index">
+        {{attr}}
+      </span>
+      )
+
+    </h2>
+    <input type="text" ng-model="schema"/>
+  </div>
 
   <div class="inputs" ng-controller="InputController">
 
-    <ul>
-      <li ng-repeat="i in getNumber(numFD) track by $index"
-          ng-controller="FdController"
-          id=""
-      >
-        <h1>
-          <span class="independent" ng-repeat="fd in breakUpFD(independent)">
-            {{fd}}
+    <ul ng-repeat="fd in FDs"
+        ng-controller="FdController"
+        id="fd-{{fd.id}}">
+      <li class="fd-values">
+        <h2>
+          {{fd.id}}:
+          <span class="independent" ng-repeat="fdLabel in breakUpFD(independent, fd.id) track by $index">
+            {{fdLabel}}
           </span>
-          <span class="dependent" ng-repeat="fd in breakUpFD(dependent)">
-            {{fd}}
+          &rightarrow;
+          <span class="dependent" ng-repeat="fdLabel in breakUpFD(dependent, fd.id) track by $index">
+            {{fdLabel}}
           </span>
-        </h1>
-        {{$index}}
-        <input type="text" ng-model="independent"/>
+        </h2>
+      </li>
+      <li class="fd-inputs">
+        <input
+          type="text"
+          ng-model="independent"
+          ng-keyup="record(fd.id)"
+          value="{{independent}}"
+        />
         &rightarrow;
-        <input type="text" ng-model="dependent"/>
+        <input
+          type="text"
+          ng-model="dependent"
+          ng-keyup="record(fd.id)"
+        />
+        <button ng-click="removeFD(fd.id)">Remove</button>
       </li>
     </ul>
 
-    <button ng-click="addFD()">Add</button>
+    <button ng-click="addNewFD()">Add</button>
+
+    <pre>{{FDs}}</pre>
   </div>
 
   <!--<script type="text/javascript" data-main="js/main" src="lib/requirejs/require.js"></script>-->
@@ -42,21 +69,49 @@
     fdCalculator.controller('InputController', [
       '$scope',
       function InputController ($scope) {
-        $scope.numFD = 1;
-        $scope.getNumber = function (numInputs) {
-            return new Array(numInputs);
+        $scope.uniqueID = 0;
+
+        $scope.FDs = [];
+
+        $scope.getFD = function (id, callback) {
+          for (var i = 0; i < $scope.FDs.length; i++) {
+            if ($scope.FDs[i].id == id) {
+              if (typeof callback == "function") {
+                callback(i, $scope.FDs[i]);
+              }
+              return $scope.FDs[i];
+            }
+          }
         };
-        $scope.addFD = function () {
-            $scope.numFD++;
+        $scope.addNewFD = function () {
+          $scope.FDs.push({
+            id: $scope.uniqueID++,
+            dependent: [],
+            independent: []
+          });
         };
+        $scope.removeFD = function (id) {
+          $scope.getFD(id, function (idx) {
+            $scope.FDs.splice(idx, 1);
+            document.getElementById('fd-' + id).remove();
+          });
+        }
+
+        $scope.addNewFD();
+
       }
     ]);
 
     fdCalculator.controller('FdController', [
       '$scope',
       function InputController ($scope) {
+        var fdSplit = /\,\s*/;
         $scope.breakUpFD = function (fds) {
-            return fds? fds.split(/\,\s*/) : [];
+          return fds? fds.split(fdSplit) : [];
+        };
+        $scope.record = function (id) {
+          $scope.getFD(id).dependent = $scope.breakUpFD($scope.dependent);
+          $scope.getFD(id).independent = $scope.breakUpFD($scope.independent);
         };
       }
     ]);
