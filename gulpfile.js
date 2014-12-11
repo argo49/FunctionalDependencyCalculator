@@ -21,9 +21,10 @@ gulp.task('sass', function() {
 
 // Concat and minify js
 gulp.task('scripts', function() {
-    return gulp.src('src/js/*.js')
-        .pipe(concat('scripts.js'))
-        .pipe(uglify())
+    return gulp.src('src/js/**/*.js')
+        // Let's avoid concatenation for now
+        //.pipe(concat('scripts.js'))
+        //.pipe(uglify())
         .pipe(gulp.dest('public/js'));
 });
 
@@ -34,13 +35,13 @@ gulp.task('html', function () {
         empty: true // saves empty angular attrs
     };
     return gulp.src('src/*.html')
-        .pipe(minHtml(options))
+        //.pipe(minHtml(options))
         .pipe(gulp.dest('public'))
 });
 
 // Watch things
 gulp.task('watch', function() {
     gulp.watch('src/scss/**/*.scss', ['sass']);
-    gulp.watch('src/js/*.js', ['scripts']);
+    gulp.watch('src/js/**/*.js', ['scripts']);
     gulp.watch('src/*.html', ['html']);
 });

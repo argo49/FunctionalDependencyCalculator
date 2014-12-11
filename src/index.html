@@ -1,14 +1,45 @@
 <!DOCTYPE html>
-<html ng-app>
+<html ng-app="fdCalculator">
 <head>
     <title>FD Calculator</title>
     <link rel="stylesheet" type="text/css" href="lib/normalize.css/normalize.css">
-    <script type="text/javascript" src="lib/angular/angular.min.js"></script>
+
 </head>
 <body>
-    <input ng-model="test" type="text"/>
-    <div>Hello {{test}}</div>
 
+
+    <div class="inputs" ng-controller="InputController">
+
+        <ul>
+            <li ng-repeat="i in getNumber(numFD) track by $index">
+                <h1>{{name}}</h1>
+                {{$index}}
+                <input type="text" ng-model="name"/>
+            </li>
+        </ul>
+
+        <button ng-click="addFD()">Add</button>
+    </div>
+
+    <!--<script type="text/javascript" data-main="js/main" src="lib/requirejs/require.js"></script>-->
+
+
+    <script type="text/javascript" src="lib/angular/angular.min.js"></script>
+    <script type="text/javascript">
+        var fdCalculator = angular.module('fdCalculator',[]);
+        fdCalculator.controller('InputController', [
+            '$scope',
+            function InputController ($scope) {
+                $scope.numFD = 1;
+                $scope.getNumber = function (numInputs) {
+                    return new Array(numInputs);
+                };
+                $scope.addFD = function () {
+                    $scope.numFD++;
+                };
+            }
+        ]);
+
+    </script>
 </body>
-
 </html>
