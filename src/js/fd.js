@@ -1,5 +1,5 @@
 
-define(['app/fdFormatter'], function (format) {
+define(['app/fdFormatter', 'app/utils'], function (format, utils) {
 
     var getUniqueID = function() {
         var UNIQUE_ID = 0;
@@ -21,7 +21,7 @@ define(['app/fdFormatter'], function (format) {
         }
 
         that.setDependent = function (dep) {
-            if (isArray(dep)) {
+            if (utils.isArray(dep)) {
                 _dependent = dep;
             }
             return this;
@@ -40,7 +40,7 @@ define(['app/fdFormatter'], function (format) {
         }
 
         that.setIndependent = function (indy) {
-            if (isArray(indy)) {
+            if (utils.isArray(indy)) {
                 _independent = indy;
             }
             return this;
@@ -87,12 +87,8 @@ define(['app/fdFormatter'], function (format) {
             }
         }
 
-        function isArray (arr) {
-            return Object.prototype.toString.call() === '[object Array]';
-        }
-
         function isValid (strarr) {
-            if (isArray(strarr)) {
+            if (utils.isArray(strarr)) {
                 return true;
             } else if (typeof strarr === "string") {
                 dep = formatter.split(strarr);

@@ -23,17 +23,17 @@
 
   <div class="inputs" ng-controller="InputController">
 
-    <ul ng-repeat="fd in FDs"
+    <ul ng-repeat="fd in fdSet.getFds()"
         ng-controller="FdController"
-        id="fd-{{fd.id}}">
+        id="fd-{{fd.getId()}}">
       <li class="fd-values">
         <h2>
-          {{fd.id}}:
-          <span class="independent" ng-repeat="fdLabel in breakUpFD(independent, fd.id) track by $index">
+          {{fd.getId()}}:
+          <span class="independent" ng-repeat="fdLabel in fd.getIndependent() track by $index">
             {{fdLabel}}
           </span>
           &rightarrow;
-          <span class="dependent" ng-repeat="fdLabel in breakUpFD(dependent, fd.id) track by $index">
+          <span class="dependent" ng-repeat="fdLabel in fd.getDependent() track by $index">
             {{fdLabel}}
           </span>
         </h2>
@@ -42,85 +42,26 @@
         <input
           type="text"
           ng-model="independent"
-          ng-keyup="record(fd.id)"
-          value="{{independent}}"
+          ng-keyup="record(fd.getId())"
         />
         &rightarrow;
         <input
           type="text"
           ng-model="dependent"
-          ng-keyup="record(fd.id)"
+          ng-keyup="record(fd.getId())"
         />
-        <button ng-click="removeFD(fd.id)">Remove</button>
+        <button ng-click="removeFd(fd.getId())">Remove</button>
       </li>
     </ul>
 
-    <button ng-click="addNewFD()">Add</button>
+    <button ng-click="addNewFd()">Add</button>
     <button ng-click="calculateCanonical()">Calculate</button>
 
-    <pre>{{FDs}}</pre>
+    <pre>{{fds}}</pre>
   </div>
-
-
 
   <script type="text/javascript" src="lib/angular/angular.min.js"></script>
   <script type="text/javascript" data-main="js/main" src="lib/requirejs/require.js"></script>
-  <script type="text/javascript">/*
-    var fdCalculator = angular.module('fdCalculator',[]);
 
-    fdCalculator.controller('InputController', [
-      '$scope',
-      function InputController ($scope) {
-        $scope.uniqueID = 0;
-
-        $scope.FDs = [];
-
-        $scope.getFD = function (id, callback) {
-          for (var i = 0; i < $scope.FDs.length; i++) {
-            if ($scope.FDs[i].id == id) {
-              if (typeof callback == "function") {
-                callback(i, $scope.FDs[i]);
-              }
-              return $scope.FDs[i];
-            }
-          }
-        };
-        $scope.addNewFD = function () {
-          $scope.FDs.push({
-            id: $scope.uniqueID++,
-            dependent: [],
-            independent: []
-          });
-        };
-        $scope.removeFD = function (id) {
-          $scope.getFD(id, function (idx) {
-            $scope.FDs.splice(idx, 1);
-            document.getElementById('fd-' + id).remove();
-          });
-        }
-        $scope.calculateCanonical = function () {
-
-        }
-
-        $scope.addNewFD();
-
-      }
-    ]);
-
-    fdCalculator.controller('FdController', [
-      '$scope',
-      function InputController ($scope) {
-        var fdSplit = /\,\s*/;
-/*        $scope.breakUpFD = function (fds) {
-          return fds? fds.split(fdSplit) : [];
-        };
-        $scope.record = function (id) {
-          $scope.getFD(id).dependent = $scope.breakUpFD($scope.dependent);
-          $scope.getFD(id).independent = $scope.breakUpFD($scope.independent);
-        };
-      }
-    ]);
-*/
-  </script>
 </body>
 </html>

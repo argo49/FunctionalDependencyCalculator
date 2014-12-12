@@ -2,7 +2,7 @@ define(['app/fd'], function (fd) {
     return function () {
         var that = {}
 
-        var _fds     = [];
+        var _fds = [];
 
         that.getFds = function () {
             return _fds;
@@ -22,12 +22,32 @@ define(['app/fd'], function (fd) {
             return this;
         }
 
+        that.clone = function () {
+            var it = {};
+            var prop;
+
+            for (prop in that) {
+                if (that.hasOwnProperty(prop)) {
+                    it[prop] = that[prop];
+                }
+            }
+
+            var itFds = [];
+            for (var i = 0; i < _fds.length; i++) {
+                itFds.push(_fds[i]);
+            };
+
+            var _fds = itFds;
+
+            return it;
+        }
+
         that.removeFd = function (id, callback) {
             findFd(id, function(i) {
                 if (typeof callback === "function"){
-                    callback();
+                    callback(i, _fds[i]);
                 }
-                _fds.splice[i, 1];
+                _fds.splice(i, 1);
             });
             return this;
         }

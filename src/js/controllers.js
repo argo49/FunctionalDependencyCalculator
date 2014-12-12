@@ -1,4 +1,4 @@
-define(['app/fdSet', 'app/fdFormatter'], function (fdSet, format) {
+define(['app/fdSet', 'app/fdFormatter', 'app/utils'], function (fdSet, fdFormatter, utils) {
 
   var fdCalculator = angular.module('fdCalculator',[]);
 
@@ -11,15 +11,17 @@ define(['app/fdSet', 'app/fdFormatter'], function (fdSet, format) {
       $scope.getFD = function (id, callback) {
         fdSet.getFd(id);
       };
-      $scope.removeFD = function (id) {
-        $scope.fdSet.removeFd(id, function () {
-          document.getElementById('fd-' + id).remove();
+      $scope.removeFd = function (id) {
+        $scope.fdSet.removeFd(id, function (idx, fdi) {
+          document.getElementById('fd-' + fdi.getId()).remove();
         });
+      }
+      $scope.addNewFd = function () {
+        $scope.fdSet.addNewFd();
       }
       $scope.calculateCanonical = function () {
 
       }
-
     }
   ]);
 
@@ -27,8 +29,15 @@ define(['app/fdSet', 'app/fdFormatter'], function (fdSet, format) {
     '$scope',
     function InputController ($scope) {
       $scope.record = function (id) {
-        $scope.fdSet.getFd(id).setDependent($scope.dependent);
-        $scope.fdSet.getFd(id).setIndependent($scope.independent);
+
+        var dep  = fdFormatter.split($scope.dependent);
+        var indy = fdFormatter.split($scope.independent);
+
+        var fd   = $scope.fdSet.getFd(id);
+
+        fd.setDependent(dep);
+        fd.setIndependent(indy);
+
       };
     }
   ]);
@@ -38,7 +47,7 @@ define(['app/fdSet', 'app/fdFormatter'], function (fdSet, format) {
     function SchemaController ($scope) {
       $scope.attributes = [];
       $scope.record = function () {
-        $scope.attributes = format.split($scope.schema);
+        $scope.attributes = fdFormatter.split($scope.schema);
       };
     }
   ]);
