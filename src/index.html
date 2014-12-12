@@ -9,16 +9,16 @@
 
   <h1>Functional Dependency Calculator</h1>
 
-  <div class="schema" ng-controller="FdController">
+  <div class="schema" ng-controller="SchemaController">
     <h2>
       schema(
-      <span class="attribute" ng-repeat="attr in breakUpFD(schema) track by $index">
+      <span class="attribute" ng-repeat="attr in attributes track by $index">
         {{attr}}
       </span>
       )
 
     </h2>
-    <input type="text" ng-model="schema"/>
+    <input type="text" ng-model="schema" ng-keyup="record()"/>
   </div>
 
   <div class="inputs" ng-controller="InputController">

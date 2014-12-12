@@ -1,5 +1,5 @@
 
-define([], function () {
+define(['app/fdFormatter'], function (format) {
 
     var getUniqueID = function() {
         var UNIQUE_ID = 0;
@@ -12,16 +12,19 @@ define([], function () {
 
         var that = {};
 
-        var _dependent   = (isArray(dep))?  dep  : [];
-        var _independent = (isArray(indy))? indy : [];
+        var _dependent   = (isValid(dep))?  dep  : [];
+        var _independent = (isValid(indy))? indy : [];
         var _id          = getUniqueID();
 
         that.getDependent = function () {
             return _dependent;
         }
 
-        that.getIndependent = function () {
-            return _independent;
+        that.setDependent = function (dep) {
+            if (isArray(dep)) {
+                _dependent = dep;
+            }
+            return this;
         }
 
         that.addDependent = function (str) {
@@ -30,6 +33,17 @@ define([], function () {
 
         that.removeDependent = function (stridx) {
             remove(_dependent, stridx);
+        }
+
+        that.getIndependent = function () {
+            return _independent;
+        }
+
+        that.setIndependent = function (indy) {
+            if (isArray(indy)) {
+                _independent = indy;
+            }
+            return this;
         }
 
         that.addIndependent = function (str) {
@@ -65,8 +79,26 @@ define([], function () {
             }
         }
 
+        function splitFdString (str) {
+            if (typeof str !== "string") {
+                return str;
+            } else {
+                return str.split(_fdSplit);
+            }
+        }
+
         function isArray (arr) {
             return Object.prototype.toString.call() === '[object Array]';
+        }
+
+        function isValid (strarr) {
+            if (isArray(strarr)) {
+                return true;
+            } else if (typeof strarr === "string") {
+                dep = formatter.split(strarr);
+                splitFdString(strarr);
+                return true;
+            }
         }
 
         return that;

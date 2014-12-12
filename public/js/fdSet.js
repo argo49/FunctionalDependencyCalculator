@@ -1,22 +1,18 @@
-define(['app/functionalDependency'], function (fd) {
+define(['app/fd'], function (fd) {
     return function () {
         var that = {}
 
         var _fds     = [];
-        var _fdSplit = /\,\s*/;
 
         that.getFds = function () {
             return _fds;
         }
 
-        that.getFd = function (id) {
+        that.getFd = function (id, callback) {
             return findFd(id);
         }
 
         that.addFd = function (indy, dep) {
-            indy = splitFdString(indy);
-            dep  = splitFdString(dep);
-
             _fds.push(fd(indy, dep));
             return this;
         }
@@ -26,19 +22,14 @@ define(['app/functionalDependency'], function (fd) {
             return this;
         }
 
-        that.removeFd = function (id) {
+        that.removeFd = function (id, callback) {
             findFd(id, function(i) {
+                if (typeof callback === "function"){
+                    callback();
+                }
                 _fds.splice[i, 1];
             });
             return this;
-        }
-
-        function splitFdString (str) {
-            if (typeof str !== "string") {
-                return str;
-            } else {
-                return str.split(_fdSplit);
-            }
         }
 
         function findFd (id, callback) {

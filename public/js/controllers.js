@@ -1,34 +1,18 @@
-define(['app/fdSet'], function (fdSet) {
+define(['app/fdSet', 'app/fdFormatter'], function (fdSet, format) {
 
   var fdCalculator = angular.module('fdCalculator',[]);
 
   fdCalculator.controller('InputController', [
     '$scope',
     function InputController ($scope) {
-      $scope.uniqueID = 0;
 
-      $scope.FDs = [];
+      $scope.fdSet = fdSet().addNewFd();
 
       $scope.getFD = function (id, callback) {
-        for (var i = 0; i < $scope.FDs.length; i++) {
-          if ($scope.FDs[i].id == id) {
-            if (typeof callback == "function") {
-              callback(i, $scope.FDs[i]);
-            }
-            return $scope.FDs[i];
-          }
-        }
-      };
-      $scope.addNewFD = function () {
-        $scope.FDs.push({
-          id: $scope.uniqueID++,
-          dependent: [],
-          independent: []
-        });
+        fdSet.getFd(id);
       };
       $scope.removeFD = function (id) {
-        $scope.getFD(id, function (idx) {
-          $scope.FDs.splice(idx, 1);
+        $scope.fdSet.removeFd(id, function () {
           document.getElementById('fd-' + id).remove();
         });
       }
@@ -36,21 +20,25 @@ define(['app/fdSet'], function (fdSet) {
 
       }
 
-      $scope.addNewFD();
-
     }
   ]);
 
   fdCalculator.controller('FdController', [
     '$scope',
     function InputController ($scope) {
-      var fdSplit = /\,\s*/;
-      $scope.breakUpFD = function (fds) {
-        return fds? fds.split(fdSplit) : [];
-      };
       $scope.record = function (id) {
-        $scope.getFD(id).dependent   = $scope.breakUpFD($scope.dependent);
-        $scope.getFD(id).independent = $scope.breakUpFD($scope.independent);
+        $scope.fdSet.getFd(id).setDependent($scope.dependent);
+        $scope.fdSet.getFd(id).setIndependent($scope.independent);
+      };
+    }
+  ]);
+
+  fdCalculator.controller('SchemaController', [
+    '$scope',
+    function SchemaController ($scope) {
+      $scope.attributes = [];
+      $scope.record = function () {
+        $scope.attributes = format.split($scope.schema);
       };
     }
   ]);

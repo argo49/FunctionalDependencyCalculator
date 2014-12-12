@@ -1,5 +1,5 @@
 
-define([], function () {
+define(['app/fdFormatter'], function (format) {
 
     var getUniqueID = function() {
         var UNIQUE_ID = 0;
@@ -15,8 +15,6 @@ define([], function () {
         var _dependent   = (isValid(dep))?  dep  : [];
         var _independent = (isValid(indy))? indy : [];
         var _id          = getUniqueID();
-
-        var _fdSplit = /\,\s*/;
 
         that.getDependent = function () {
             return _dependent;
@@ -97,7 +95,8 @@ define([], function () {
             if (isArray(strarr)) {
                 return true;
             } else if (typeof strarr === "string") {
-                dep = splitFdString(strarr);
+                dep = formatter.split(strarr);
+                splitFdString(strarr);
                 return true;
             }
         }
