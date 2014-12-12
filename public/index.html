@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="fdCalculator">
+<html>
 <head>
     <title>FD Calculator</title>
     <link rel="stylesheet" type="text/css" href="lib/normalize.css/normalize.css">
@@ -61,10 +61,11 @@
     <pre>{{FDs}}</pre>
   </div>
 
-  <!--<script type="text/javascript" data-main="js/main" src="lib/requirejs/require.js"></script>-->
+
 
   <script type="text/javascript" src="lib/angular/angular.min.js"></script>
-  <script type="text/javascript">
+  <script type="text/javascript" data-main="js/main" src="lib/requirejs/require.js"></script>
+  <script type="text/javascript">/*
     var fdCalculator = angular.module('fdCalculator',[]);
 
     fdCalculator.controller('InputController', [
@@ -97,6 +98,9 @@
             document.getElementById('fd-' + id).remove();
           });
         }
+        $scope.calculateCanonical = function () {
+
+        }
 
         $scope.addNewFD();
 
@@ -107,7 +111,7 @@
       '$scope',
       function InputController ($scope) {
         var fdSplit = /\,\s*/;
-        $scope.breakUpFD = function (fds) {
+/*        $scope.breakUpFD = function (fds) {
           return fds? fds.split(fdSplit) : [];
         };
         $scope.record = function (id) {
@@ -116,7 +120,7 @@
         };
       }
     ]);
-
+*/
   </script>
 </body>
 </html>
