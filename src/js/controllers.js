@@ -1,4 +1,4 @@
-define(['app/fdSet', 'app/fdFormatter', 'app/utils'], function (fdSet, fdFormatter, utils) {
+define(['app/fdSet', 'app/fdFormatter', 'app/utils', 'app/fdClosure'], function (fdSet, fdFormatter, utils, closure) {
 
   var fdCalculator = angular.module('fdCalculator',[]);
 
@@ -7,6 +7,9 @@ define(['app/fdSet', 'app/fdFormatter', 'app/utils'], function (fdSet, fdFormatt
     function InputController ($scope) {
 
       $scope.fdSet = fdSet().addNewFd();
+
+      var fset2 = fdSet().addFd(['a'],['b','c']).addFd(['a','b'],['d']).addFd(['f'],['e']);
+      console.log(closure(fset2, ['f', 'b']));
 
       $scope.getFD = function (id, callback) {
         fdSet.getFd(id);
