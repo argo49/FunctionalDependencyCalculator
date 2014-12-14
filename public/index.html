@@ -16,7 +16,6 @@
         {{attr}}
       </span>
       )
-
     </h2>
     <input type="text" ng-model="schema" ng-keyup="record()"/>
   </div>
@@ -59,6 +58,13 @@
 
     <pre>{{fds}}</pre>
   </div>
+
+  <blockquote>
+    Intuitively, a canonical cover of F is a "minimal" set of functional
+dependencies equivalent to F, having no redundant dependencies or
+redundant parts of dependencies
+    <div>- Silberschatz, Korth and Sudarshan</div>
+  </blockquote>
 
   <script type="text/javascript" src="lib/angular/angular.min.js"></script>
   <script type="text/javascript" data-main="js/main" src="lib/requirejs/require.js"></script>

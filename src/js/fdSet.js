@@ -32,6 +32,13 @@ define(['app/fd'], function (fd) {
             return this;
         }
 
+        that.print = function () {
+            console.log("===================");
+            for (var i = 0; i < _fds.length; i++) {
+                _fds[i].print();
+            }
+        }
+
         function findFd (id, callback) {
             for (var i = 0; i < _fds.length; i++) {
                 if (_fds[i].getId() == id) {

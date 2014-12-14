@@ -1,4 +1,10 @@
-define(['app/fdSet', 'app/fdFormatter', 'app/utils', 'app/fdClosure'], function (fdSet, fdFormatter, utils, closure) {
+define([
+  'app/fdSet',
+  'app/fdFormatter',
+  'app/utils',
+  'app/fdClosure',
+  'app/fdCanonical'],
+  function (fdSet, fdFormatter, utils, closure, canonical) {
 
   var fdCalculator = angular.module('fdCalculator',[]);
 
@@ -8,8 +14,40 @@ define(['app/fdSet', 'app/fdFormatter', 'app/utils', 'app/fdClosure'], function 
 
       $scope.fdSet = fdSet().addNewFd();
 
-      var fset2 = fdSet().addFd(['a'],['b','c']).addFd(['a','b'],['d']).addFd(['f'],['e']);
-      console.log(closure(fset2, ['f', 'b']));
+      var fset2 = fdSet()
+      /*
+        .addFd(['a'],['b','c'])
+        .addFd(['c'],['a','d'])
+        .addFd(['e'],['a','b','c'])
+        .addFd(['f'],['c','d'])
+        .addFd(['c','d'],['b','e','f'])
+        .addFd(['a','b'],['d'])*/
+/*
+        .addFd(['a'],['c','b'])
+        .addFd(['c','d'],['e'])
+        .addFd(['b'],['d'])
+        .addFd(['e'],['a'])
+*/
+/*
+        .addFd(['a','b'],['c'])
+        .addFd(['b'],['e'])
+        .addFd(['c','f'],['d'])
+        .addFd(['c'],['a'])
+        .addFd(['b'],['f'])
+        .addFd(['c','e'],['f'])
+        .addFd(['c','d'],['b'])
+        .addFd(['b'],['c'])
+*/
+/*
+        .addFd(['a'],['b'])
+        .addFd(['a','b'],['c'])
+        .addFd(['d'],['a','c'])
+        .addFd(['d'],['e'])
+*/
+      console.log(closure(fset2, ['c']));
+
+      canonical(fset2, 'a');
+
 
       $scope.getFD = function (id, callback) {
         fdSet.getFd(id);

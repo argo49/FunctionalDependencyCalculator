@@ -17,7 +17,7 @@ define(['app/fdFormatter', 'app/utils'], function (format, utils) {
         var _id          = getUniqueID();
 
         that.getDependent = function () {
-            return _dependent;
+            return _dependent.slice(0);
         }
 
         that.setDependent = function (dep) {
@@ -32,11 +32,11 @@ define(['app/fdFormatter', 'app/utils'], function (format, utils) {
         }
 
         that.removeDependent = function (stridx) {
-            remove(_dependent, stridx);
+            return remove(_dependent, stridx);
         }
 
         that.getIndependent = function () {
-            return _independent;
+            return _independent.slice(0);
         }
 
         that.setIndependent = function (indy) {
@@ -47,15 +47,19 @@ define(['app/fdFormatter', 'app/utils'], function (format, utils) {
         }
 
         that.addIndependent = function (str) {
-            add(_dependent, str);
+            add(_independent, str);
         }
 
         that.removeIndependent = function (stridx) {
-            remove(_dependent, stridx);
+            return remove(_independent, stridx);
         }
 
         that.getId = function () {
             return _id;
+        }
+
+        that.print = function () {
+            console.log(_independent, " -> ", _dependent);
         }
 
         function add(arr, str) {
@@ -68,15 +72,20 @@ define(['app/fdFormatter', 'app/utils'], function (format, utils) {
         }
 
         function remove(arr, stridx) {
+            var attrToReturn;
             if (typeof stridx === "string") {
                 for (var i = 0; i < arr.length; i++) {
                     if (arr[i] == stridx) {
+                        attrToReturn = arr[i];
                         arr.splice(stridx, 1);
                     }
                 }
             } else if (typeof stridx === "number") {
+                attrToReturn = arr[stridx];
                 arr.splice(stridx, 1);
             }
+
+            return attrToReturn;
         }
 
         function splitFdString (str) {
