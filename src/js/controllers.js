@@ -13,41 +13,14 @@ define([
     function InputController ($scope) {
 
       $scope.fdSet = fdSet().addNewFd();
+      $scope.canonicalCover;
 
-      var fset2 = fdSet()
-      /*
-        .addFd(['a'],['b','c'])
-        .addFd(['c'],['a','d'])
-        .addFd(['e'],['a','b','c'])
-        .addFd(['f'],['c','d'])
-        .addFd(['c','d'],['b','e','f'])
-        .addFd(['a','b'],['d'])*/
-/*
-        .addFd(['a'],['c','b'])
-        .addFd(['c','d'],['e'])
-        .addFd(['b'],['d'])
-        .addFd(['e'],['a'])
-*/
-/*
-        .addFd(['a','b'],['c'])
-        .addFd(['b'],['e'])
-        .addFd(['c','f'],['d'])
-        .addFd(['c'],['a'])
-        .addFd(['b'],['f'])
-        .addFd(['c','e'],['f'])
-        .addFd(['c','d'],['b'])
-        .addFd(['b'],['c'])
-*/
 /*
         .addFd(['a'],['b'])
         .addFd(['a','b'],['c'])
         .addFd(['d'],['a','c'])
         .addFd(['d'],['e'])
 */
-      console.log(closure(fset2, ['c']));
-
-      canonical(fset2, 'a');
-
 
       $scope.getFD = function (id, callback) {
         fdSet.getFd(id);
@@ -61,7 +34,7 @@ define([
         $scope.fdSet.addNewFd();
       }
       $scope.calculateCanonical = function () {
-
+        $scope.canonicalCover = canonical($scope.fdSet);
       }
     }
   ]);
@@ -69,7 +42,7 @@ define([
   fdCalculator.controller('FdController', [
     '$scope',
     function InputController ($scope) {
-      $scope.record = function (id) {
+      $scope.record = function (id, $event) {
 
         var dep  = fdFormatter.split($scope.dependent);
         var indy = fdFormatter.split($scope.independent);
@@ -79,7 +52,21 @@ define([
         fd.setDependent(dep);
         fd.setIndependent(indy);
 
+        if ($event) {
+          if ($event.which == 13) {
+            $scope.addNewFd();
+          } else if ($event.which == 9) {
+            $scope.addNewFd();
+          }
+        }
+
       };
+
+      $scope.analyzeInput = function ($event) {
+        if ($event.which == 9) {
+          $scope.addNewFd();
+        }
+      }
     }
   ]);
 

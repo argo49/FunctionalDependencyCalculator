@@ -1,32 +1,62 @@
-define(['app/fd', 'app/setOperations', 'app/fdClosure', 'app/setOperations'],
-  function (fd, setOperations, closure, sets) {
+define([
+  'app/fd',
+  'app/setOperations',
+  'app/fdClosure',
+  'app/setOperations',
+  'app/fdSet'
+  ],
+  function (fd, setOperations, closure, sets, FdSet) {
 
-  return function isExtraneous(fdSet, attr) {
-    if (typeof attr !== "string") { return false; }
+  return function canonical(fdSet) {
 
     console.log('original fdset');
-    fdSet.print();
+    var fdClone = cloneFdSet(fdSet);
+    fdClone.print();
 
-    singletonRHS(fdSet);
+    removeEmpty(fdClone);
+
+    singletonRHS(fdClone);
 
     console.log('singletonRHS');
-    fdSet.print();
+    fdClone.print();
 
-    reduceLHS(fdSet);
+    reduceLHS(fdClone);
 
     console.log('reduceLHS');
-    fdSet.print();
+    fdClone.print();
 
-    removeUnnecessary(fdSet);
+    removeUnnecessary(fdClone);
 
     console.log('removeUnnecessary');
-    fdSet.print();
+    fdClone.print();
 
-    combineLHS(fdSet);
+    combineLHS(fdClone);
 
     console.log('combineLHS');
-    fdSet.print();
+    fdClone.print();
 
+    return fdClone;
+
+  }
+
+  function cloneFdSet (fdSet) {
+    var fdSetClone = FdSet();
+    var fds = fdSet.getFds();
+    for (var i = 0; i < fds.length; i++) {
+      fdSetClone.addFd(fds[i].getIndependent(), fds[i].getDependent());
+    };
+
+    return fdSetClone;
+  }
+
+  function removeEmpty (fdSet) {
+    var fds = fdSet.getFds();
+    for (var i = 0; i < fds.length; i++) {
+      if (!fds[i].getDependent().length && !fds[i].getIndependent().length) {
+        fdSet.removeFd(fds[i].getId());
+        i--;
+      }
+    };
   }
 
   // Convert to singleton on RHS

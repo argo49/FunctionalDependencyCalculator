@@ -27,7 +27,6 @@
         id="fd-{{fd.getId()}}">
       <li class="fd-values">
         <h2>
-          {{fd.getId()}}:
           <span class="independent" ng-repeat="fdLabel in fd.getIndependent() track by $index">
             {{fdLabel}}
           </span>
@@ -48,8 +47,9 @@
           type="text"
           ng-model="dependent"
           ng-keyup="record(fd.getId())"
+          ng-keydown="analyzeInput($event)"
         />
-        <button ng-click="removeFd(fd.getId())">Remove</button>
+        <span ng-click="removeFd(fd.getId())">Remove</span>
       </li>
     </ul>
 
@@ -57,6 +57,23 @@
     <button ng-click="calculateCanonical()">Calculate</button>
 
     <pre>{{fds}}</pre>
+
+    <div class="canonical">
+      <h2>Canonical Cover</h2>
+      <ul>
+        <li class="fd-values" ng-repeat="fd in canonicalCover.getFds()">
+          <h2>
+            <span class="independent" ng-repeat="fdLabel in fd.getIndependent() track by $index">
+              {{fdLabel}}
+            </span>
+            &rightarrow;
+            <span class="dependent" ng-repeat="fdLabel in fd.getDependent() track by $index">
+              {{fdLabel}}
+            </span>
+          </h2>
+        </li>
+      </ul>
+    </div>
   </div>
 
   <blockquote>

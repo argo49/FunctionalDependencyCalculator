@@ -1,5 +1,5 @@
 define(['app/fd'], function (fd) {
-    return function () {
+    return function fdSet() {
         var that = {}
 
         var _fds = [];
