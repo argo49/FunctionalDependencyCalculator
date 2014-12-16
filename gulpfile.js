@@ -12,7 +12,7 @@ gulp.task('default', ['sass', 'scripts', 'watch', 'html']);
 
 // Compile scss
 gulp.task('sass', function() {
-    return gulp.src('src/scss/*.scss')
+    return gulp.src('src/scss/**/*.scss')
         .pipe(sass())
         .pipe(prefix())
         .pipe(please())

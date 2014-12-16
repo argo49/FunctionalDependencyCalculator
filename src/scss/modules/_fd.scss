@@ -1,0 +1,29 @@
+.fd-inputs {
+    text-align: center;
+}
+
+
+.fd-values {
+
+    h3 {
+        border-color: inherit;
+    }
+
+    .independent,
+    .dependent {
+        border-bottom: 4px solid;
+        border-color: inherit;
+        margin: 0 0.2em;
+    }
+}
+
+.remove {
+    cursor        : pointer;
+    color         : red;
+    border        : 1px solid red;
+    border-radius : 20px;
+    opacity       : 0.75;
+    padding       : 2px 5px;
+    margin-left   : 5px;
+    font-size     : 11px;
+}

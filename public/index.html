@@ -3,38 +3,31 @@
 <head>
     <title>FD Calculator</title>
     <link rel="stylesheet" type="text/css" href="lib/normalize.css/normalize.css">
-
+    <link rel="stylesheet" type="text/css" href="lib/skeleton/css/skeleton.css">
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
 </head>
-<body>
-
+<body class="container">
   <h1>Functional Dependency Calculator</h1>
-
-  <div class="schema" ng-controller="SchemaController">
-    <h2>
+  <div class="schema row" ng-controller="SchemaController">
+    <h3>
       schema(
       <span class="attribute" ng-repeat="attr in attributes track by $index">
-        {{attr}}
-      </span>
+        {{attr}}</span>
       )
-    </h2>
-    <input type="text" ng-model="schema" ng-keyup="record()"/>
+    </h3>
+    <input id="schema-input" type="text" ng-model="schema" ng-keyup="record()"/>
   </div>
 
   <div class="inputs" ng-controller="InputController">
-
     <ul ng-repeat="fd in fdSet.getFds()"
         ng-controller="FdController"
         id="fd-{{fd.getId()}}">
       <li class="fd-values">
-        <h2>
-          <span class="independent" ng-repeat="fdLabel in fd.getIndependent() track by $index">
-            {{fdLabel}}
-          </span>
+        <h3>
+          <span class="independent" ng-repeat="fdLabel in fd.getIndependent() track by $index">{{fdLabel}}</span>
           &rightarrow;
-          <span class="dependent" ng-repeat="fdLabel in fd.getDependent() track by $index">
-            {{fdLabel}}
-          </span>
-        </h2>
+          <span class="dependent" ng-repeat="fdLabel in fd.getDependent() track by $index">{{fdLabel}}</span>
+        </h3>
       </li>
       <li class="fd-inputs">
         <input
@@ -49,20 +42,25 @@
           ng-keyup="record(fd.getId())"
           ng-keydown="analyzeInput($event)"
         />
-        <span ng-click="removeFd(fd.getId())">Remove</span>
+        <span class="remove" ng-click="removeFd(fd.getId())">x</span>
       </li>
     </ul>
 
     <button ng-click="addNewFd()">Add</button>
-    <button ng-click="calculateCanonical()">Calculate</button>
 
     <pre>{{fds}}</pre>
 
     <div class="canonical">
       <h2>Canonical Cover</h2>
+      <blockquote>
+        Intuitively, a canonical cover of F is a "minimal" set of functional
+    dependencies equivalent to F, having no redundant dependencies or
+    redundant parts of dependencies
+        <div>- Silberschatz, Korth and Sudarshan</div>
+      </blockquote>
       <ul>
         <li class="fd-values" ng-repeat="fd in canonicalCover.getFds()">
-          <h2>
+          <h3>
             <span class="independent" ng-repeat="fdLabel in fd.getIndependent() track by $index">
               {{fdLabel}}
             </span>
@@ -70,18 +68,12 @@
             <span class="dependent" ng-repeat="fdLabel in fd.getDependent() track by $index">
               {{fdLabel}}
             </span>
-          </h2>
+          </h3>
         </li>
       </ul>
+      <button ng-click="calculateCanonical()">Calculate</button>
     </div>
   </div>
-
-  <blockquote>
-    Intuitively, a canonical cover of F is a "minimal" set of functional
-dependencies equivalent to F, having no redundant dependencies or
-redundant parts of dependencies
-    <div>- Silberschatz, Korth and Sudarshan</div>
-  </blockquote>
 
   <script type="text/javascript" src="lib/angular/angular.min.js"></script>
   <script type="text/javascript" data-main="js/main" src="lib/requirejs/require.js"></script>

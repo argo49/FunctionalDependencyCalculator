@@ -3,10 +3,16 @@ define([
   'app/fdFormatter',
   'app/utils',
   'app/fdClosure',
-  'app/fdCanonical'],
-  function (fdSet, fdFormatter, utils, closure, canonical) {
+  'app/fdCanonical',
+  'please/please.min'],
+  function (fdSet, fdFormatter, utils, closure, canonical, please) {
 
   var fdCalculator = angular.module('fdCalculator',[]);
+
+  Please.make_scheme({
+    scheme_type: 'analogous', //set scheme type
+    format: 'rgb-string' //give it to us in rgb
+  });
 
   fdCalculator.controller('InputController', [
     '$scope',
@@ -22,6 +28,9 @@ define([
         .addFd(['d'],['e'])
 */
 
+
+
+
       $scope.getFD = function (id, callback) {
         fdSet.getFd(id);
       };
@@ -32,10 +41,22 @@ define([
       }
       $scope.addNewFd = function () {
         $scope.fdSet.addNewFd();
+        addNewColor();
       }
       $scope.calculateCanonical = function () {
         $scope.canonicalCover = canonical($scope.fdSet);
       }
+
+      function addNewColor () {
+        $scope.$watch('fdSet', function() {
+            var uls = document.querySelectorAll('.fd-values')
+            var lastUl  = uls[uls.length - 1];
+
+            lastUl.style.borderColor = Please.make_color();
+
+        }, true);
+      }
+
     }
   ]);
 
