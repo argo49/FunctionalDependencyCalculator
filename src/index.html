@@ -6,32 +6,38 @@
     <link rel="stylesheet" type="text/css" href="lib/skeleton/css/skeleton.css">
     <link rel="stylesheet" type="text/css" href="css/styles.css">
 </head>
-<body class="container">
+<body>
+<div class="container">
   <h1>Functional Dependency Calculator</h1>
+
   <div class="schema row" ng-controller="SchemaController">
     <h3>
-      schema(
-      <span class="attribute" ng-repeat="attr in attributes track by $index">
-        {{attr}}</span>
-      )
+      schema(<span class="attribute" ng-repeat="attr in attributes track by $index">{{attr}}</span>)
     </h3>
-    <input id="schema-input" class="center" type="text" ng-model="schema" ng-keyup="record()"/>
+    <input
+      id="schema-input"
+      class="center"
+      type="text"
+      placeholder="Comma separated attributes (Ex. A,B,C)"
+      ng-model="schema"
+      ng-keyup="record()"/>
   </div>
-  <div class="inputs" ng-controller="InputController">
+
+  <div class="inputs row" ng-controller="InputController">
     <hr/>
     <h2>Functional Dependencies</h2>
     <blockquote>
-        In relational database theory, a functional dependency is a constraint between two sets of attributes in a relation from a database.
-        <div>- Wikipedia</div>
+        <code>dept_name &rightarrow; budget</code> "This rule is specified as a functional dependency [where] each specific value for dept_name corresponds to at most one budget".
+        <div>- Silberschatz, Korth and Sudarshan</div>
       </blockquote>
     <ul ng-repeat="fd in fdSet.getFds()"
         ng-controller="FdController"
         id="fd-{{fd.getId()}}">
       <li class="fd-values">
         <h3>
-          <span class="independent" ng-repeat="fdLabel in fd.getIndependent() track by $index">{{fdLabel}}</span>
+          <span class="independent attribute" ng-repeat="fdLabel in fd.getIndependent() track by $index">{{fdLabel}}</span>
           &rightarrow;
-          <span class="dependent" ng-repeat="fdLabel in fd.getDependent() track by $index">{{fdLabel}}</span>
+          <span class="dependent attribute" ng-repeat="fdLabel in fd.getDependent() track by $index">{{fdLabel}}</span>
         </h3>
       </li>
       <li class="fd-inputs">
@@ -44,65 +50,65 @@
         <input
           type="text"
           ng-model="dependent"
+          ng-keyup="record(fd.getId())"
           ng-keydown="analyzeInput($event)"
         />
         <span class="remove" ng-click="removeFd(fd.getId())">x</span>
       </li>
     </ul>
-
     <button ng-click="addNewFd()">Add</button>
-
-    <pre>{{fds}}</pre>
-
-    <div class="canonical">
-      <hr/>
-      <h2>Canonical Cover</h2>
-      <blockquote>
-        Intuitively, a canonical cover of F is a "minimal" set of functional
-    dependencies equivalent to F, having no redundant dependencies or
-    redundant parts of dependencies
-        <div>- Silberschatz, Korth and Sudarshan</div>
-      </blockquote>
-      <ul>
-        <li class="fd-values" ng-repeat="fd in canonicalCover.getFds()">
-          <h3>
-            <span class="independent" ng-repeat="fdLabel in fd.getIndependent() track by $index">
-              {{fdLabel}}
-            </span>
-            &rightarrow;
-            <span class="dependent" ng-repeat="fdLabel in fd.getDependent() track by $index">
-              {{fdLabel}}
-            </span>
-          </h3>
-        </li>
-      </ul>
-      <button ng-click="calculateCanonical()">Calculate</button>
-    </div>
-
-    <div>
-      <hr/>
-      <h2>Closure</h2>
-      <blockquote>
-        The closure of F, denoted by F<sup>+</sup>,
-is the set of all functional dependencies logically implied by F
-        <div>- Silberschatz, Korth and Sudarshan</div>
-      </blockquote>
-      <div>
-        <h3>
-          <span class="attribute" ng-repeat="attr in closure track by $index">{{attr}}</span><sup>+</sup>
-        </h3>
-        <input
-          class="center"
-          type="text"
-          ng-model="closure"
-        />
-      </div>
-      <button class="closure" ng-click="calculateClosure()">Calculate</button>
-    </div>
   </div>
 
-  <script type="text/javascript" src="lib/angular/angular.min.js"></script>
-  <script type="text/javascript" data-main="js/main" src="lib/requirejs/require.js"></script>
+  <div class="canonical row" ng-controller="CanonicalController">
+    <hr/>
+    <h2>Canonical Cover</h2>
+    <blockquote>
+      Intuitively, a canonical cover of F is a "minimal" set of functional dependencies equivalent to F, having no redundant dependencies or redundant parts of dependencies
+      <div>- Silberschatz, Korth and Sudarshan</div>
+    </blockquote>
+    <ul>
+      <li class="fd-values" ng-repeat="fd in canonicalCover.getFds()">
+        <h3>
+          <span class="independent attribute" ng-repeat="fdLabel in fd.getIndependent() track by $index">
+            {{fdLabel}}
+          </span>
+          &rightarrow;
+          <span class="dependent attribute" ng-repeat="fdLabel in fd.getDependent() track by $index">
+            {{fdLabel}}
+          </span>
+        </h3>
+      </li>
+    </ul>
+    <button ng-click="calculateCanonical()">Calculate</button>
+  </div>
+
+  <div class="closure row" ng-controller="ClosureController">
+    <hr/>
+    <h2>Closure</h2>
+    <blockquote>
+      The closure of F, denoted by F<sup>+</sup>, is the set of all functional dependencies logically implied by F
+      <div>- Silberschatz, Korth and Sudarshan</div>
+    </blockquote>
+    <div>
+      <h3 class="fd-values">
+        <span class="attribute" ng-repeat="attr in splitClosure track by $index">{{attr}}</span><sup>+</sup>
+        =
+        <span class="attribute" ng-repeat="attr in closure">{{attr}}</span>
+      </h3>
+      <input
+        class="center"
+        type="text"
+        placeholder="Comma separated attributes (Ex. A,B,C)"
+        ng-model="userClosure"
+        ng-keyup="record()"
+      />
+    </div>
+    <button class="closure" ng-click="calculateClosure()">Calculate</button>
+  </div>
+</div>
+
+<script type="text/javascript" src="lib/angular/angular.min.js"></script>
+<script type="text/javascript" data-main="js/main" src="lib/requirejs/require.js"></script>
 
 </body>
 </html>

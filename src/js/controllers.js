@@ -7,19 +7,27 @@ define([
   'please/please.min'],
   function (fdSet, fdFormatter, utils, closure, canonical, please) {
 
+  // Define the app module
   var fdCalculator = angular.module('fdCalculator',[]);
 
-  Please.make_scheme({
-    scheme_type: 'analogous', //set scheme type
-    format: 'rgb-string' //give it to us in rgb
+  // Define a servide for the user's fdSet
+  fdCalculator.factory('UserFdSet', function () {
+    return fdSet().addNewFd();
   });
 
-  fdCalculator.controller('InputController', [
-    '$scope',
-    function InputController ($scope) {
+  fdCalculator.controller('SchemaController', ['$scope',
+    function SchemaController ($scope) {
+      $scope.attributes = [];
+      $scope.record = function () {
+        $scope.attributes = fdFormatter.split($scope.schema);
+      };
+    }
+  ]);
 
-      $scope.fdSet = fdSet().addNewFd();
-      $scope.canonicalCover;
+  fdCalculator.controller('InputController', ['$scope', 'UserFdSet',
+    function InputController ($scope, UserFdSet) {
+
+      $scope.fdSet = UserFdSet;
 
 /*
         .addFd(['a'],['b'])
@@ -27,8 +35,6 @@ define([
         .addFd(['d'],['a','c'])
         .addFd(['d'],['e'])
 */
-
-
       $scope.getFD = function (id, callback) {
         fdSet.getFd(id);
       };
@@ -39,10 +45,11 @@ define([
       }
       $scope.addNewFd = function () {
         $scope.fdSet.addNewFd();
-        addNewColor();
-      }
-      $scope.calculateCanonical = function () {
-        $scope.canonicalCover = canonical($scope.fdSet);
+
+        // After it's inserted into DOM
+        $scope.$watch('fdSet', function() {
+          addNewColor();
+        }, true);
       }
 
       $scope.calculateClosure = function () {
@@ -51,41 +58,32 @@ define([
       }
 
       function addNewColor () {
-        $scope.$watch('fdSet', function() {
-            var uls = document.querySelectorAll('.fd-values')
-            var lastUl  = uls[uls.length - 1];
+        var uls    = document.querySelectorAll('.fd-values')
+        var lastUl = uls[uls.length - 1];
 
-            lastUl.style.borderColor = Please.make_color();
-
-        }, true);
+        lastUl.style.borderColor = Please.make_color();
       }
 
     }
   ]);
 
-  fdCalculator.controller('FdController', [
-    '$scope',
-    function InputController ($scope) {
-      $scope.record = function (id, $event) {
+  fdCalculator.controller('FdController', ['$scope','UserFdSet',
+    function FdController ($scope, UserFdSet) {
+
+      // Sync it up with the model
+      $scope.record = function (id) {
 
         var dep  = fdFormatter.split($scope.dependent);
         var indy = fdFormatter.split($scope.independent);
 
-        var fd   = $scope.fdSet.getFd(id);
+        var fd   = UserFdSet.getFd(id);
 
         fd.setDependent(dep);
         fd.setIndependent(indy);
 
-        if ($event) {
-          if ($event.which == 13) {
-            $scope.addNewFd();
-          } else if ($event.which == 9) {
-            $scope.addNewFd();
-          }
-        }
-
       };
 
+      // Watch for the tab press to add a new fd
       $scope.analyzeInput = function ($event) {
         if ($event.which == 9) {
           $scope.addNewFd();
@@ -94,13 +92,28 @@ define([
     }
   ]);
 
-  fdCalculator.controller('SchemaController', [
-    '$scope',
-    function SchemaController ($scope) {
-      $scope.attributes = [];
+  fdCalculator.controller('CanonicalController', ['$scope', 'UserFdSet',
+    function CanonicalController ($scope, UserFdSet) {
+      $scope.canonicalCover;
+
+      $scope.calculateCanonical = function () {
+        $scope.canonicalCover = canonical(UserFdSet);
+      }
+    }
+  ]);
+
+  fdCalculator.controller('ClosureController', ['$scope', 'UserFdSet',
+    function ClosureController ($scope, UserFdSet) {
+      $scope.closure;
+
       $scope.record = function () {
-        $scope.attributes = fdFormatter.split($scope.schema);
+        $scope.splitClosure = fdFormatter.split($scope.userClosure);
       };
+
+      $scope.calculateClosure = function () {
+        var parsedClosure = fdFormatter.split($scope.userClosure);
+        $scope.closure = closure(UserFdSet, parsedClosure);
+      }
     }
   ]);
 
