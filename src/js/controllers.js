@@ -29,8 +29,6 @@ define([
 */
 
 
-
-
       $scope.getFD = function (id, callback) {
         fdSet.getFd(id);
       };
@@ -45,6 +43,11 @@ define([
       }
       $scope.calculateCanonical = function () {
         $scope.canonicalCover = canonical($scope.fdSet);
+      }
+
+      $scope.calculateClosure = function () {
+        var clo = $scope.closure.split('');
+        console.log(closure($scope.fdSet, clo));
       }
 
       function addNewColor () {

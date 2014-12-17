@@ -15,10 +15,15 @@
         {{attr}}</span>
       )
     </h3>
-    <input id="schema-input" type="text" ng-model="schema" ng-keyup="record()"/>
+    <input id="schema-input" class="center" type="text" ng-model="schema" ng-keyup="record()"/>
   </div>
-
   <div class="inputs" ng-controller="InputController">
+    <hr/>
+    <h2>Functional Dependencies</h2>
+    <blockquote>
+        In relational database theory, a functional dependency is a constraint between two sets of attributes in a relation from a database.
+        <div>- Wikipedia</div>
+      </blockquote>
     <ul ng-repeat="fd in fdSet.getFds()"
         ng-controller="FdController"
         id="fd-{{fd.getId()}}">
@@ -39,7 +44,6 @@
         <input
           type="text"
           ng-model="dependent"
-          ng-keyup="record(fd.getId())"
           ng-keydown="analyzeInput($event)"
         />
         <span class="remove" ng-click="removeFd(fd.getId())">x</span>
@@ -51,6 +55,7 @@
     <pre>{{fds}}</pre>
 
     <div class="canonical">
+      <hr/>
       <h2>Canonical Cover</h2>
       <blockquote>
         Intuitively, a canonical cover of F is a "minimal" set of functional
@@ -72,6 +77,27 @@
         </li>
       </ul>
       <button ng-click="calculateCanonical()">Calculate</button>
+    </div>
+
+    <div>
+      <hr/>
+      <h2>Closure</h2>
+      <blockquote>
+        The closure of F, denoted by F<sup>+</sup>,
+is the set of all functional dependencies logically implied by F
+        <div>- Silberschatz, Korth and Sudarshan</div>
+      </blockquote>
+      <div>
+        <h3>
+          <span class="attribute" ng-repeat="attr in closure track by $index">{{attr}}</span><sup>+</sup>
+        </h3>
+        <input
+          class="center"
+          type="text"
+          ng-model="closure"
+        />
+      </div>
+      <button class="closure" ng-click="calculateClosure()">Calculate</button>
     </div>
   </div>
 
